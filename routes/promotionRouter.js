@@ -137,17 +137,17 @@ promotionRouter.route('/:promotionId')
       .catch((err) => next(err));
   });
 
-partnerRouter
-  .route("/:partnerId/comments/:commentId")
+promotionRouter
+  .route("/:promotionId/comments/:commentId")
   .get((req, res, next) => {
-    Partner.findById(req.params.partnerId)
-      .then((partner) => {
-        if (partner && partner.comments.id(req.params.commentId)) {
+    Promotion.findById(req.params.promotionId)
+      .then((promotion) => {
+        if (promotion && promotion.comments.id(req.params.commentId)) {
           res.statusCode = 200;
           res.setHeader("Content-Type", "application/json");
-          res.json(partner.comments.id(req.params.commentId));
-        } else if (!partner) {
-          err = new Error(`partner ${req.params.partnerId} not found`);
+          res.json(promotion.comments.id(req.params.commentId));
+        } else if (!promotion) {
+          err = new Error(`promotion ${req.params.promotionId} not found`);
           err.status = 404;
           return next(err);
         } else {
@@ -182,8 +182,8 @@ partnerRouter
               res.json(promotion);
             })
             .catch((err) => next(err));
-        } else if (!partner) {
-          err = new Error(`partner ${req.params.commnentId} not found`);
+        } else if (!promotion) {
+          err = new Error(`promotion ${req.params.commnentId} not found`);
           err.status = 404;
           return next(err);
         } else {
@@ -204,7 +204,7 @@ partnerRouter
             .then((promotion) => {
               res.statusCode = 200;
               res.setHeader("Content-Type", "application/json");
-              res.json(partner);
+              res.json(promotion);
             })
             .catch((err) => next(err));
         } else if (!promotion) {
