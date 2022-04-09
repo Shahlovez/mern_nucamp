@@ -5,12 +5,12 @@ const promotionRouter = express.Router();
 promotionRouter.route('/')
 .get((req, res, next) => {
     Promotion.find()
-      .then((promotions) => {
+      .then(promotions => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
         res.json(promotions);
       })
-      .catch((err) => next(err));
+      .catch(err => next(err));
   })
 .post((req, res, next) => {
     Promotion.create(req.body)
@@ -20,7 +20,7 @@ promotionRouter.route('/')
         res.setHeader("Content-Type", "application/json");
         res.json(promotion);
       })
-      .catch((err) => next(err));
+      .catch(err => next(err));
   })
 .put((req, res) => {
     res.statusCode = 403;
@@ -33,18 +33,18 @@ promotionRouter.route('/')
         res.setHeader("Content-Type", "application/json");
         res.json(response);
       })
-      .catch((err) => next(err));
+      .catch(err => next(err));
   });
 
 promotionRouter.route('/:promotionId')
 .get((req, res, next) => {
     Promotion.findById(req.params.promotionId)
-      .then((promotion) => {
+      .then(promotion => {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
         res.json(promotion);
       })
-      .catch((err) => next(err));
+      .catch(err => next(err));
   })
 .post((req, res) => {
     res.statusCode = 403;
@@ -53,7 +53,7 @@ promotionRouter.route('/:promotionId')
 .put((req, res,next) => {
     Promotion.findByIdAndUpdate(req.params.promotionId,{ $set: req.body,},
         { new: true })
-         .then((promotion) => {
+         .then(promotion => {
           res.statusCode = 200;
           res.setHeader("Content-Type", "application/json");
           res.json(promotion);
@@ -62,34 +62,34 @@ promotionRouter.route('/:promotionId')
     })
 .delete((req, res, next) => {
     Promotion.findByIdAndDelete(req.params.promotionId)
-          .then((response) => {
+          .then(response => {
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json");
             res.json(response);
           })
-          .catch((err) => next(err));
+          .catch(err => next(err));
       });
 
     //   COMMENTS 
    promotionRouter.route("/:promotionId/comments")
   .get((req, res, next) => {
     Promotion.findById(req.params.promotionId)
-      .then((promotion) => {
+      .then(promotion => {
         if (promotion) {
           res.statusCode = 200;
           res.setHeader("Content-Type", "application/json");
           res.json(promotion.comments);
         } else {
-          err = new Error(`Promotion ${req.params.promotionId} not found`);
+          const err = new Error(`Promotion ${req.params.promotionId} not found`);
           err.status = 404;
           return next(err);
         }
       })
-      .catch((err) => next(err));
+      .catch(err => next(err));
   })
   .post((req, res, next) => {
     Promotion.findById(req.params.promotionId)
-      .then((promotion) => {
+      .then(promotion => {
         if (promotion) {
           promotion.comments.push(req.body);
           Promotion.save()
@@ -98,14 +98,14 @@ promotionRouter.route('/:promotionId')
               res.setHeader("Content-Type", "application/json");
               res.json(promotion);
             })
-            .catch((err) => next(err));
+            .catch(err => next(err));
         } else {
-          err = new Error(`promotion ${req.params.promotionId} not found`);
+         const err = new Error(`promotion ${req.params.promotionId} not found`);
           err.status = 404;
           return next(err);
         }
       })
-      .catch((err) => next(err));
+      .catch(err => next(err));
   })
   .put((req, res) => {
     res.statusCode = 403;
@@ -115,33 +115,33 @@ promotionRouter.route('/:promotionId')
   })
   .delete((req, res, next) => {
     Promotion.findById(req.params.promotionId)
-      .then((promotion) => {
+      .then(promotion => {
         if (promotion) {
           for (let i = promotion.comments.length - 1; i >= 0; i--) {
             promotion.comments.id(promotion.comments[i]._id).remove();
           }
           promotion
             .save()
-            .then((promotion) => {
+            .then(promotion => {
               res.statusCode = 200;
               res.setHeader("Content-Type", "application/json");
               res.json(promotion);
             })
-            .catch((err) => next(err));
+            .catch(err => next(err));
         } else {
-          err = new Error(`promotion ${req.params.promotionId} not found`);
+         const err = new Error(`promotion ${req.params.promotionId} not found`);
           err.status = 404;
           return next(err);
         }
       })
-      .catch((err) => next(err));
+      .catch(err => next(err));
   });
 
 promotionRouter
   .route("/:promotionId/comments/:commentId")
   .get((req, res, next) => {
     Promotion.findById(req.params.promotionId)
-      .then((promotion) => {
+      .then(promotion => {
         if (promotion && promotion.comments.id(req.params.commentId)) {
           res.statusCode = 200;
           res.setHeader("Content-Type", "application/json");
@@ -151,12 +151,12 @@ promotionRouter
           err.status = 404;
           return next(err);
         } else {
-          err = new Error(`Comment ${req.params.commentId} not found`);
+          const err = new Error(`Comment ${req.params.commentId} not found`);
           err.status = 404;
           return next(err);
         }
       })
-      .catch((err) => next(err));
+      .catch(err => next(err));
   })
   .post((req, res) => {
     res.statusCode = 403;
@@ -166,7 +166,7 @@ promotionRouter
   })
   .put((req, res, next) => {
     Promotion.findById(req.params.promotionId)
-      .then((promotion) => {
+      .then(promotion => {
         if (promotion && promotion.comments.id(req.params.commentId)) {
           if (req.body.rating) {
            promotion.comments.id(req.params.commentId).rating = req.body.rating;
@@ -176,47 +176,47 @@ promotionRouter
           }
           promotion
             .save()
-            .then((promotion) => {
+            .then(promotion => {
               res.statusCode = 200;
               res.setHeader("Content-Type", "application/json");
               res.json(promotion);
             })
-            .catch((err) => next(err));
+            .catch(err => next(err));
         } else if (!promotion) {
           err = new Error(`promotion ${req.params.commnentId} not found`);
           err.status = 404;
           return next(err);
         } else {
-          err = new Error(`Comment ${req.params.commentId} not found`);
+          const err = new Error(`Comment ${req.params.commentId} not found`);
           err.status = 404;
           return next(err);
         }
       })
-      .catch((err) => next(err));
+      .catch(err => next(err));
   })
   .delete((req, res, next) => {
     Promotion.findById(req.params.promotionId)
-      .then((promotion) => {
+      .then(promotion => {
         if (promotion && promotion.comments.id(req.params.commentId)) {
          promotion.comments.id(req.params.commentId).remove();
           promotion
             .save()
-            .then((promotion) => {
+            .then(promotion => {
               res.statusCode = 200;
               res.setHeader("Content-Type", "application/json");
               res.json(promotion);
             })
-            .catch((err) => next(err));
+            .catch(err => next(err));
         } else if (!promotion) {
-          err = new Error(`promotion ${req.params.promotionId} not found`);
+          const err = new Error(`promotion ${req.params.promotionId} not found`);
           err.status = 404;
           return next(err);
         } else {
-          err = new Error(`Comment ${req.params.commentId} not found`);
+          const err = new Error(`Comment ${req.params.commentId} not found`);
           err.status = 404;
           return next(err);
         }
       })
-      .catch((err) => next(err));
+      .catch(err => next(err));
   });
 module.exports = promotionRouter;
