@@ -12,7 +12,7 @@ promotionRouter.route('/')
       })
       .catch(err => next(err));
   })
-.post((req, res, next) => {
+.post(authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
     Promotion.create(req.body)
       .then((promotion) => {
         console.log("Promotion Created ", promotion);
