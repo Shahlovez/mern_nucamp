@@ -11,7 +11,7 @@ campsiteRouter.route('/')
         res.setHeader('Content-Type', 'application/json');
         res.json(campsites);
     })
-    .catch((err) => next(err));
+    .catch(err => next(err));
 })
 .post(authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
     Campsite.create(req.body)
@@ -46,7 +46,7 @@ campsiteRouter.route('/:campsiteId')
         res.setHeader('Content-Type', 'application/json');
         res.json(campsite);
     })
-    .catch((err) => next(err));
+    .catch(err => next(err));
 })
 .post(authenticate.verifyUser,(req, res) => {
     res.statusCode = 403;
@@ -56,12 +56,12 @@ campsiteRouter.route('/:campsiteId')
     Campsite.findByIdAndUpdate(req.params.campsiteId, {
         $set: req.body
     }, { new: true })
-    .then((campsite) => {
+    .then(campsite => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(campsite);
     })
-    .catch((err) => next(err));
+    .catch(err => next(err));
 })
 .delete(authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
     Campsite.findByIdAndDelete(req.params.campsiteId)
@@ -70,7 +70,7 @@ campsiteRouter.route('/:campsiteId')
         res.setHeader('Content-Type', 'application/json');
         res.json(response);
     })
-    .catch((err) => next(err));
+    .catch(err => next(err));
 });
 
 // exercise part 2 COMMENTS
@@ -79,7 +79,7 @@ campsiteRouter.route('/:campsiteId/comments')
 .get((req, res, next) => {
     Campsite.findById(req.params.campsiteId)
     .populate('comments.author')
-    .then((campsite) => {
+    .then(campsite => {
         if (campsite) {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
@@ -90,7 +90,7 @@ campsiteRouter.route('/:campsiteId/comments')
             return next(err);
         }
     })
-    .catch((err) => next(err));
+    .catch(err => next(err));
 })
 .post(authenticate.verifyUser, (req, res, next) => {
     Campsite.findById(req.params.campsiteId)
@@ -104,14 +104,14 @@ campsiteRouter.route('/:campsiteId/comments')
                 res.setHeader('Content-Type', 'application/json');
                 res.json(campsite);
             })
-            .catch((err) => next(err));
+            .catch(err => next(err));
         } else {
             err = new Error(`Campsite ${req.params.campsiteId} not found`);
             err.status = 404;
             return next(err);
         }
     })
-    .catch((err) => next(err));
+    .catch(err => next(err));
 })
 .put(authenticate.verifyUser,(req, res) => {
     res.statusCode = 403;
@@ -119,32 +119,32 @@ campsiteRouter.route('/:campsiteId/comments')
 })
 .delete(authenticate.verifyUser,authenticate.verifyAdmin,(req, res, next) => {
     Campsite.findById(req.params.campsiteId)
-    .then((campsite) => {
+    .then(campsite => {
         if (campsite) {
             for (let i = (campsite.comments.length-1); i >= 0; i--) {
                 campsite.comments.id(campsite.comments[i]._id).remove();
             }
             campsite.save()
-            .then((campsite)=> {
+            .then(campsite => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
                 res.json(campsite);
             })
-            .catch((err) => next(err));
+            .catch(err => next(err));
         } else {
             err = new Error(`Campsite ${req.params.campsiteId} not found`);
             err.status = 404;
             return next(err);
         }
     })
-    .catch((err) => next(err));
+    .catch(err => next(err));
 });
 
 campsiteRouter.route('/:campsiteId/comments/:commentId')
 .get((req, res, next) => {
     Campsite.findById(req.params.campsiteId)
     .populate('comments.author')
-    .then((campsite) => {
+    .then(campsite => {
         if (campsite && campsite.comments.id(req.params.commentId)) {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
@@ -159,7 +159,7 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
             return next(err);
         }
     })
-    .catch((err) => next(err));
+    .catch(err => next(err));
 })
 .post(authenticate.verifyUser, authenticate.verifyAdmin,(req, res) => {
     res.statusCode = 403;
@@ -167,7 +167,7 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
 })
 .put(authenticate.verifyUser,(req, res, next) => {
     Campsite.findById(req.params.campsiteId)
-    .then((campsite) => {
+    .then(campsite => {
         if (campsite && campsite.comments.id(req.params.commentId)) {
             if (req.body.rating) {
                 campsite.comments.id(req.params.commentId).rating = req.body.rating;
@@ -181,7 +181,7 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
                 res.setHeader('Content-Type', 'application/json');
                 res.json(campsite);
             })
-            .catch((err) => next(err));
+            .catch(err => next(err));
         } else if (!campsite) {
             err = new Error(`Campsite ${req.params.campsiteId} not found`);
             err.status = 404;
@@ -192,7 +192,7 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
             return next(err);
         }
     })
-    .catch((err) => next(err));
+    .catch(err => next(err));
 })
 .delete(authenticate.verifyUser,(req, res, next) => {
     Campsite.findById(req.params.campsiteId)
@@ -205,7 +205,7 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
                 res.setHeader('Content-Type', 'application/json');
                 res.json(campsite);
             })
-            .catch((err) => next(err));
+            .catch(err => next(err));
         } else if (!campsite) {
             err = new Error(`Campsite ${req.params.campsiteId} not found`);
             err.status = 404;
@@ -216,6 +216,6 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
             return next(err);
         }
     })
-    .catch((err) => next(err));
+    .catch(err => next(err));
 });
 module.exports = campsiteRouter;
