@@ -26,7 +26,7 @@ promotionRouter.route('/')
       })
       .catch(err => next(err));
   })
-.put(cors.corsWithOptions,(req, res) => {
+.put(cors.corsWithOptions,authenticate.verifyUser, authenticate.verifyAdmin,(req, res) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /promotions');
 })

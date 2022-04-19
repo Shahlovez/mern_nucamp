@@ -6,7 +6,7 @@ const cors = require('./cors');
 
 const router = express.Router();
 // /* GET users listing. */
-router.get('/', cors. cors, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+router.get('/', cors. corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     User.find()
     .then(users => {
         res.statusCode = 200;
@@ -56,7 +56,7 @@ router.post('/signup', cors.corsWithOptions,(req, res) => {
         res.json({success: true, token: token, status: 'You are successfully logged in!'});
     });
 
-    router.get('/logout', cors.cors, (req, res, next) => {
+    router.get('/logout',  cors. corsWithOptions, (req, res, next) => {
     if (req.session) {
         req.session.destroy();
         res.clearCookie('session-id');

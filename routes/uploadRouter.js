@@ -24,6 +24,7 @@ const upload = multer({ storage: storage, fileFilter: imageFileFilter});
 const uploadRouter = express.Router();
 
 uploadRouter.route('/')
+.options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
 .get(cors. cors, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
     res.statusCode = 403;
     res.end('GET operation not supported on /imageUpload');
