@@ -56,7 +56,7 @@ router.post('/signup', cors.corsWithOptions,(req, res) => {
         res.json({success: true, token: token, status: 'You are successfully logged in!'});
     });
 
-    router.get('/logout',  cors. corsWithOptions, (req, res, next) => {
+    router.get('/logout', cors. corsWithOptions, (req, res, next) => {
     if (req.session) {
         req.session.destroy();
         res.clearCookie('session-id');
