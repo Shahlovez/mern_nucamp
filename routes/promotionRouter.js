@@ -51,11 +51,11 @@ promotionRouter.route('/:promotionId')
       })
       .catch(err => next(err));
   })
-.post(cors.corsWithOptions, (req, res) => {
+.post(cors.corsWithOptions, authenticate.verifyUser,(req, res) => {
     res.statusCode = 403;
     res.end(`POST operation not supported on /promotions/${req.params.promotionId}`);
 })
-.put(cors.corsWithOptions,authenticate.verifyUser, authenticate.verifyAdmin,(req, res,next) => {
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin,(req, res,next) => {
     Promotion.findByIdAndUpdate(req.params.promotionId,{ $set: req.body,},
         { new: true })
          .then(promotion => {
